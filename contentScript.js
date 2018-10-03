@@ -16,9 +16,13 @@ class EmojiSwapper {
 
   watchDOM() {
     const observer = new MutationObserver((mutations) => {
-      Array.from(document.getElementsByTagName("span"))
-        .filter((tag) => !tag.isContentEditable && tag.children.length === 0 && tag.innerText.match(EmojiSwapper.MATCHER))
-        .forEach((tag) => this.swap(tag));
+      mutations.forEach((mutation) => {
+        if (mutation.type === "childList") {
+          Array.from(document.getElementsByTagName("span"))
+            .filter((tag) => !tag.isContentEditable && tag.children.length === 0 && tag.innerText.match(EmojiSwapper.MATCHER))
+            .forEach((tag) => this.swap(tag));
+        }
+      });
     });
 
     observer.observe(document.body, {
