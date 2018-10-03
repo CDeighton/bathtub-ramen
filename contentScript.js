@@ -10,7 +10,7 @@ class EmojiSwapper {
       const name = match.slice(1,-1);
       const src = this.emoji[name];
 
-      if (src) tag.innerHTML = tag.innerHTML.replace(match, EmojiSwapper.BUILD_IMAGE(src));
+      if (src) tag.innerHTML = tag.innerHTML.replace(match, EmojiSwapper.BUILD_IMAGE(name, src));
     });
   }
 
@@ -29,8 +29,9 @@ class EmojiSwapper {
     });
   }
 
-  static BUILD_IMAGE(src) {
+  static BUILD_IMAGE(name, src) {
     const image = new Image(EmojiSwapper.SIZE, EmojiSwapper.SIZE);
+    image.title = name;
     image.src = src;
 
     return image.outerHTML;
@@ -40,6 +41,4 @@ class EmojiSwapper {
   static get SIZE() { return 20; }
 }
 
-chrome.storage.sync.get("emoji", (data) => {
-  new EmojiSwapper(data.emoji);
-})
+chrome.storage.sync.get("emoji", (data) => { new EmojiSwapper(data.emoji) });
