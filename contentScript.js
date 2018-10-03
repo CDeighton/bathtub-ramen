@@ -30,7 +30,8 @@ class EmojiSwapper {
   }
 
   static BUILD_IMAGE(name, src) {
-    const image = new Image(EmojiSwapper.SIZE, EmojiSwapper.SIZE);
+    const image = new Image();
+    image.height = EmojiSwapper.SIZE;
     image.title = name;
     image.src = src;
 
