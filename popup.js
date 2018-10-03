@@ -6,7 +6,7 @@ const messages = document.querySelector("#messages");
 const URL = "https://slack.com/api/emoji.list";
 
 function refreshEmoji() {
-  chrome.storage.sync.get("token", (data) => {
+  chrome.storage.local.get("token", (data) => {
     const xhr = new XMLHttpRequest();
 
     xhr.open("GET", `${URL}?token=${data.token}`, true);
@@ -15,7 +15,7 @@ function refreshEmoji() {
 
     xhr.onload = () => {
       if (xhr.status === 200) {
-        chrome.storage.sync.set({ emoji: xhr.response.emoji });
+        chrome.storage.local.set({ custom_emoji: xhr.response.emoji });
       }
     };
 
@@ -32,10 +32,10 @@ form.onsubmit = (event) => {
   event.preventDefault();
   const token = tokenField.value;
 
-  chrome.storage.sync.set({ token: token });
+  chrome.storage.local.set({ token: token });
   refreshEmoji();
 
   messages.innerText = "Saved";
 }
 
-chrome.storage.sync.get("token", (data) => { tokenField.value = data.token });
+chrome.storage.local.get("token", (data) => { tokenField.value = data.token });

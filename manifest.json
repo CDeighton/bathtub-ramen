@@ -3,6 +3,10 @@
   "version": "1.0",
   "description": "Everything about this sickens me",
   "permissions": ["activeTab", "declarativeContent", "storage", "http://*/", "https://*/"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "content_scripts": [
    {
      "matches": ["https://www.facebook.com/*", "https://www.messenger.com/*"],

@@ -1,6 +1,7 @@
 class EmojiSwapper {
-  constructor(emoji) {
-    this.emoji = emoji;
+  constructor(unicode, custom) {
+    this.unicode = unicode;
+    this.custom = custom || {};
 
     this.watchDOM();
   }
@@ -8,7 +9,14 @@ class EmojiSwapper {
   swap(tag) {
     new Set(tag.innerText.match(EmojiSwapper.MATCHER)).forEach((match) => {
       const name = match.slice(1,-1);
-      const src = this.emoji[name];
+      const emoji = this.unicode[name];
+
+      if (emoji) {
+        tag.innerHTML = tag.innerHTML.replace(match, EmojiSwapper.PRESENT_UNICODE(name, emoji));
+        return;
+      }
+
+      const src = this.custom[name];
 
       if (src) tag.innerHTML = tag.innerHTML.replace(match, EmojiSwapper.BUILD_IMAGE(name, src));
     });
@@ -33,6 +41,10 @@ class EmojiSwapper {
     });
   }
 
+  static PRESENT_UNICODE(name, emoji) {
+    return `<b title="${name}">${emoji}</b>`
+  }
+
   static BUILD_IMAGE(name, src) {
     const image = new Image();
     image.height = EmojiSwapper.SIZE;
@@ -46,4 +58,4 @@ class EmojiSwapper {
   static get SIZE() { return 20; }
 }
 
-chrome.storage.sync.get("emoji", (data) => { new EmojiSwapper(data.emoji) });
+chrome.storage.local.get(["unicode_emoji", "custom_emoji"], (data) => { new EmojiSwapper(data.unicode_emoji, data.custom_emoji) });
