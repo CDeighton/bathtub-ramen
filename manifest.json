@@ -11,11 +11,15 @@
    {
      "matches": ["https://www.facebook.com/*", "https://www.messenger.com/*"],
      "js": ["contentScript.js"],
+     "css": ["party.css"],
      "run_at": "document_end"
    }
  ],
   "browser_action": {
     "default_popup": "popup.html"
   },
-  "manifest_version": 2
+  "manifest_version": 2,
+  "web_accessible_resources": [
+    "party.css"
+  ]
 }

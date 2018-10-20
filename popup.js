@@ -1,6 +1,7 @@
 const tokenField = document.querySelector("#token");
 const form = document.querySelector("#form");
 const refresh = document.querySelector("#refresh");
+const party = document.querySelector("#party");
 const messages = document.querySelector("#messages");
 
 const URL = "https://slack.com/api/emoji.list";
@@ -23,9 +24,25 @@ function refreshEmoji() {
   });
 }
 
+function togglePartying() {
+  chrome.storage.local.set({"partying" : party.checked});
+};
+
 refresh.onclick = () => {
   refreshEmoji();
   messages.innerText = "Refreshed";
+};
+
+party.onclick = () => {
+  togglePartying();
+
+  chrome.storage.local.get("partying", function(storage) {
+    if (storage["partying"]) {
+      messages.innerText = "Partying hard";
+    } else {
+      messages.innerText = "Partying slightly less hard";
+    }
+  });
 };
 
 form.onsubmit = (event) => {
@@ -39,3 +56,4 @@ form.onsubmit = (event) => {
 }
 
 chrome.storage.local.get("token", (data) => { tokenField.value = data.token });
+chrome.storage.local.get("partying", (data) => { party.checked = data.partying });
