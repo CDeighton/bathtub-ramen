@@ -1,7 +1,8 @@
 class EmojiSwapper {
-  constructor(unicode, custom) {
+  constructor(unicode, custom, partying) {
     this.unicode = unicode;
     this.custom = custom || {};
+    this.partying = partying;
 
     this.watchDOM();
   }
@@ -22,8 +23,25 @@ class EmojiSwapper {
     });
   }
 
+  partyWithCorrectFirmness() {
+    const container = document.getElementsByClassName("uiScrollableAreaContent")[2];
+
+    chrome.storage.local.get("partying", function(storage) {
+      if (storage["partying"] && container) {
+        container.classList.add("party-mode");
+      }
+      else if (container) {
+        container.classList.remove("party-mode");
+      }
+    });
+  }
+
   watchDOM() {
+    setInterval(() => { this.partyWithCorrectFirmness(); }, 100);
+
     const observer = new MutationObserver((mutations) => {
+      this.partyWithCorrectFirmness();
+
       mutations.forEach((mutation) => {
         if (mutation.type === "childList") {
           Array.from(document.getElementsByTagName("span"))
@@ -58,4 +76,4 @@ class EmojiSwapper {
   static get SIZE() { return 20; }
 }
 
-chrome.storage.local.get(["unicode_emoji", "custom_emoji"], (data) => { new EmojiSwapper(data.unicode_emoji, data.custom_emoji) });
+chrome.storage.local.get(["unicode_emoji", "custom_emoji", "partying"], (data) => { new EmojiSwapper(data.unicode_emoji, data.custom_emoji, data.partying) });
